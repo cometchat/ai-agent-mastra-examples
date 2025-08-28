@@ -1,49 +1,37 @@
-# Weather Agent Template
 
-This is a template project that demonstrates how to create a weather agent using the Mastra framework. The agent can provide weather information and forecasts based on user queries.
+# Mastra Knowledge Agent
 
-## Overview
+A retrieval-augmented agent that answers documentation questions by fetching relevant snippets from your docs and providing concise, cited responses in chat.
 
-The Weather Agent template showcases how to:
+## Features
 
-- Create an AI-powered agent using Mastra framework
-- Implement weather-related workflows
-- Handle user queries about weather conditions
-- Integrate with OpenAI's API for natural language processing
+- Answers only from ingested docs
+- Responds when explicitly mentioned (e.g., `@agent`)
+- Returns answers with source citations
+- API endpoints for ingestion, search, and chat
 
 ## Setup
 
-1. Copy `.env.example` to `.env` and fill in your API keys.
-2. Install dependencies: `pnpm install`
-3. Run the project: `pnpm dev`.
+1. Create a Mastra app and add your OpenAI API key to `.env`.
 
-## Environment Variables
+2. Ingest docs via `/api/tools/ingestSources`.
 
-- `OPENAI_API_KEY`: Your OpenAI API key. [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+3. Ask questions via `/api/agents/knowledge/generate`.
 
+4. Connect to CometChat as an AI Agent.
 
-## Knowledge Agent Quickstart
+## Project Structure
 
-1. Install deps:
+- Agent: `src/mastra/agents/knowledge-agent.ts`
+- Tools: `src/mastra/tools/docs-retriever.ts`, `ingest-sources.ts`
+- Server: `src/mastra/index.ts`
+- Knowledge base: `knowledge/`
 
-```bash
-npm i axios cheerio pdf-parse
-```
+## Security
 
-2. Run dev:
+Protect endpoints, validate inputs, and keep secrets server-side.
 
-```bash
-npx mastra dev
-```
+## Links
 
-3. Ingest sources then ask a question via HTTP:
-
-```bash
-curl -s -X POST http://localhost:4111/api/tools/ingestSources \
- -H 'Content-Type: application/json' \
- -d '{"sources":["https://mastra.ai/blog/introducing-mastra-mcp"], "namespace":"mastra"}'
-
-curl -s -X POST http://localhost:4111/api/agents/knowledge/generate \
- -H 'Content-Type: application/json' \
- -d '{"messages":[{"role":"user","content":"Summarize MCP support in Mastra"}], "toolParams": {"namespace":"mastra"}}'
-```
+- [CometChat AI Agents Docs](https://cometchat-22654f5b-docs-navigation.mintlify.app/ai-agents/overview)
+- [Mastra Knowledge Agent Repo](https://github.com/cometchat/ai-agent-mastra-examples/tree/main/mastra-knowledge-agent)
