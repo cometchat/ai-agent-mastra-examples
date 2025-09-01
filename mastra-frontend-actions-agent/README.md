@@ -79,5 +79,5 @@ Expected local base: `http://localhost:4111/api`
 
 ## Links
 
-- Docs: [Frontend Actions Agent](https://cometchat-22654f5b-docs-navigation.mintlify.app/ai-agents/mastra-frontend-actions-agent)
+- Docs: [Frontend Actions Agent](https://www.cometchat.com/docs/ai-agents/mastra-frontend-actions-agent)
 - Repo: [GitHub](https://github.com/cometchat/ai-agent-mastra-examples/tree/main/mastra-frontend-actions-agent)

@@ -110,5 +110,5 @@ Then open Swagger UI to explore routes: [http://localhost:4111/swagger-ui](http:
 
 ## Links
 
-- CometChat AI Agents docs: [docs](https://cometchat-22654f5b-docs-navigation.mintlify.app/ai-agents/mastra-knowledge-agent)
+- CometChat AI Agents docs: [docs](https://www.cometchat.com/docs/ai-agents/mastra-knowledge-agent)
 - Repo: [GitHub](https://github.com/cometchat/ai-agent-mastra-examples/tree/main/mastra-knowledge-agent)

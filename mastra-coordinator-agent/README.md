@@ -79,5 +79,5 @@ Expected local base: `http://localhost:4111/api`
 
 ## Links
 
-- Docs: [Coordinator Agent](https://cometchat-22654f5b-docs-navigation.mintlify.app/ai-agents/mastra-coordinator-agent)
+- Docs: [Coordinator Agent](https://www.cometchat.com/docs/ai-agents/mastra-coordinator-agent)
 - Repo: [GitHub](https://github.com/cometchat/ai-agent-mastra-examples/tree/main/mastra-coordinator-agent)

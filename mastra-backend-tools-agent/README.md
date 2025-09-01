@@ -76,5 +76,5 @@ Expected local base: `http://localhost:4111/api`
 
 ## Links
 
-- Docs: [Backend Tools Agent](https://cometchat-22654f5b-docs-navigation.mintlify.app/ai-agents/mastra-backend-tools-agent)
+- Docs: [Backend Tools Agent](https://www.cometchat.com/docs/ai-agents/mastra-backend-tools-agent)
 - Repo: [GitHub](https://github.com/cometchat/ai-agent-mastra-examples/tree/main/mastra-backend-tools-agent)
