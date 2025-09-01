@@ -39,7 +39,7 @@ Answers documentation questions using only ingested sources and includes short c
 
 - Folder: `mastra-knowledge-agent/`
 - Key endpoints: `/api/tools/ingestSources`, `/api/tools/searchDocs`, `/api/agents/knowledge/generate`
-- Docs: [Build Your Knowledge Agent with Mastra](https://cometchat-22654f5b-docs-navigation.mintlify.app/ai-agents/mastra-knowledge-agent)
+- Docs: [Build Your Knowledge Agent with Mastra](https://www.cometchat.com/docs/ai-agents/mastra-knowledge-agent)
 
 ### Frontend Actions Agent
 
@@ -47,7 +47,7 @@ Returns safe, structured tool calls for the browser to run UI effects (e.g., con
 
 - Folder: `mastra-frontend-actions-agent/`
 - Key endpoint: `/api/agents/celebration/generate`
-- Docs: [Build Your Frontend Actions Agent with Mastra](https://cometchat-22654f5b-docs-navigation.mintlify.app/ai-agents/mastra-frontend-actions-agent)
+- Docs: [Build Your Frontend Actions Agent with Mastra](https://www.cometchat.com/docs/ai-agents/mastra-frontend-actions-agent)
 
 ### Backend Tools Agent
 
@@ -55,7 +55,7 @@ Invokes secure server-side tools (e.g., deals API) and summarizes results for ch
 
 - Folder: `mastra-backend-tools-agent/`
 - Key endpoint: `/api/agents/deals/generate`
-- Docs: [Build Your Backend Tools Agent with Mastra](https://cometchat-22654f5b-docs-navigation.mintlify.app/ai-agents/mastra-backend-tools-agent)
+- Docs: [Build Your Backend Tools Agent with Mastra](https://www.cometchat.com/docs/ai-agents/mastra-backend-tools-agent)
 
 ### Coordinator (Relay) Agent
 
@@ -63,7 +63,7 @@ Classifies intent and routes to specialist agents (billing, support, tech suppor
 
 - Folder: `mastra-coordinator-agent/`
 - Key endpoint: `/api/agents/relay/generate`
-- Docs: [Build Your Multi-agent Orchestration Agent with Mastra](https://cometchat-22654f5b-docs-navigation.mintlify.app/ai-agents/mastra-coordinator-agent)
+- Docs: [Build Your Multi-agent Orchestration Agent with Mastra](https://www.cometchat.com/docs/ai-agents/mastra-coordinator-agent)
 
 ## Common tips
 
