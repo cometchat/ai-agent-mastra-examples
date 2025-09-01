@@ -1,10 +1,10 @@
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
-import { RelayAgent, RelayResult } from '../agents/relay-agent';
+import { OrchestratorAgent, OrchestratorResult } from '../agents/orchestrator-agent';
 
-const internalRelay = new RelayAgent();
+const internalOrchestrator = new OrchestratorAgent();
 
-export const relayRouteTool = createTool({
+export const orchestratorRouteTool = createTool({
   id: 'relay-route',
   description: 'Route a support question to the appropriate specialized or human endpoint and return the answer with routing metadata.',
   inputSchema: z.object({
@@ -19,7 +19,7 @@ export const relayRouteTool = createTool({
   }),
   execute: async ({ context }) => {
     const { question } = context as { question: string; includeMetadata?: boolean };
-    const result: RelayResult = await internalRelay.ask(question);
+    const result: OrchestratorResult = await internalOrchestrator.ask(question);
     return {
       answer: result.answer,
       routedTo: result.routedTo,

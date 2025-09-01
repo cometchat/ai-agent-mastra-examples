@@ -1,8 +1,8 @@
 import { createStep, createWorkflow } from '@mastra/core/workflows';
 import { z } from 'zod';
-import { RelayAgent, RelayResult } from '../agents/relay-agent';
+import { OrchestratorAgent, OrchestratorResult } from '../agents/orchestrator-agent';
 
-const internalRelay = new RelayAgent();
+const internalOrchestrator = new OrchestratorAgent();
 
 const routeQuestion = createStep({
   id: 'route-question',
@@ -18,7 +18,7 @@ const routeQuestion = createStep({
   }),
   execute: async ({ inputData }) => {
     if (!inputData) throw new Error('Missing input');
-    const result: RelayResult = await internalRelay.ask(inputData.question);
+    const result: OrchestratorResult = await internalOrchestrator.ask(inputData.question);
     // Explicitly return object matching output schema
     return {
       answer: result.answer,
@@ -29,8 +29,8 @@ const routeQuestion = createStep({
   },
 });
 
-export const relayWorkflow = createWorkflow({
-  id: 'relay-workflow',
+export const orchestratorWorkflow = createWorkflow({
+  id: 'orchestrator-workflow',
   inputSchema: z.object({
     question: z.string().min(3),
   }),

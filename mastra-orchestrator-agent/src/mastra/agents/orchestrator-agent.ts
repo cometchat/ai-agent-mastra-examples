@@ -4,15 +4,15 @@ import { techSupportAgent } from './tech-support-agent';
 import { humanRepAgent } from './human-rep-agent';
 import { managerAgent } from './manager-agent';
 
-export interface RelayResult {
+export interface OrchestratorResult {
   answer: string;
   routedTo: 'billing' | 'tech' | 'support' | 'human' | 'manager';
   escalated: boolean;
   escalationLevel?: 'human' | 'manager';
 }
 
-export class RelayAgent {
-  async ask(question: string): Promise<RelayResult> {
+export class OrchestratorAgent {
+  async ask(question: string): Promise<OrchestratorResult> {
     // Simple keyword-based routing for demo purposes
     const lower = question.toLowerCase();
     if (lower.includes('bill') || lower.includes('invoice') || lower.includes('payment')) {
