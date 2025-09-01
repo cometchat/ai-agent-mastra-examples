@@ -112,3 +112,4 @@ dist
 *.db
 *.db-*
 **/.DS_Store
+mastra-frontend-actions-agent/widget/index.html
