@@ -6,7 +6,7 @@ Create an orchestrator agent that classifies user intent and routes to the best 
 
 - An orchestrator agent that detects intent and orchestrates a handoff
 - Specialist agents that answer specific domains
-- A routing tool + workflow to perform the selection and preserve context
+- An orchestrator tool + workflow to perform the selection and preserve context
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@ Check logs to see which specialist handled the request.
 ## How it works
 
 1) The orchestrator understands the request and selects a specialist.
-2) The routing tool + workflow perform the handoff, forwarding relevant context.
+2) The orchestrator tool + workflow perform the handoff, forwarding relevant context.
 3) The specialist generates the answer; the orchestrator returns the final message.
 
 ## API
@@ -50,7 +50,7 @@ Expected local base: `http://localhost:4111/api`
 
 - Orchestrator: `src/mastra/agents/orchestrator-agent.ts`
 - Specialists: `src/mastra/agents/{billing,support,tech-support,manager,human-rep}-agent.ts`
-- Tool: `src/mastra/tools/orchestrator-route-tool.ts`
+- Tool: `src/mastra/tools/orchestrator-tool.ts`
 - Workflow: `src/mastra/workflows/orchestrator-workflow.ts`
 - Server: `src/mastra/index.ts`
 
@@ -69,7 +69,7 @@ Expected local base: `http://localhost:4111/api`
 
 - Auth (API key/JWT), CORS, and rate limiting
 - Validate inputs and sanitize logs/responses
-- Monitor routing distribution and set fallbacks
+- Monitor orchestration distribution and set fallbacks
 
 ## Troubleshooting
 

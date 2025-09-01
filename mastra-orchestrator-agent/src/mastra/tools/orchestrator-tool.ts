@@ -4,8 +4,8 @@ import { OrchestratorAgent, OrchestratorResult } from '../agents/orchestrator-ag
 
 const internalOrchestrator = new OrchestratorAgent();
 
-export const orchestratorRouteTool = createTool({
-  id: 'relay-route',
+export const orchestratorTool = createTool({
+  id: 'orchestrator',
   description: 'Route a support question to the appropriate specialized or human endpoint and return the answer with routing metadata.',
   inputSchema: z.object({
     question: z.string().min(3),

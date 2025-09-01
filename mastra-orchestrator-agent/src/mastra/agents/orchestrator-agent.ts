@@ -43,7 +43,7 @@ export class OrchestratorAgent {
     for await (const chunk of supportResponse.textStream) {
       supportOutput += chunk;
     }
-    // Escalation logic: if support agent says 'Escalate', route to human or manager
+    // Escalation logic: if support agent says 'Escalate', orchestrate a handoff to human or manager
     if (supportOutput.toLowerCase().includes('escalate to manager')) {
       const answer = await managerAgent.answer(question);
       return { answer, routedTo: 'manager', escalated: true, escalationLevel: 'manager' };

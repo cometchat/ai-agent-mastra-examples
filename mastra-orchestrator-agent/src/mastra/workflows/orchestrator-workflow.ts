@@ -5,7 +5,7 @@ import { OrchestratorAgent, OrchestratorResult } from '../agents/orchestrator-ag
 const internalOrchestrator = new OrchestratorAgent();
 
 const routeQuestion = createStep({
-  id: 'route-question',
+  id: 'orchestrator-question',
   description: 'Route an incoming support question to the correct specialized (billing/tech/support) or human/manager escalation path.',
   inputSchema: z.object({
     question: z.string().min(3).describe('End-user support question'),
