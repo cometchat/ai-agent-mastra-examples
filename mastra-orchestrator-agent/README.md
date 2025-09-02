@@ -24,15 +24,15 @@ npm install
 npx mastra dev
 ```
 
-2) Ask the orchestrator (endpoint id remains `relay`):
+2) Ask the orchestrator (agent id is `orchestratorAgent`):
 
 ```bash
-curl -s -X POST http://localhost:4111/api/agents/relay/generate \
+curl -s -X POST http://localhost:4111/api/agents/orchestratorAgent/generate \
 	-H 'Content-Type: application/json' \
 	-d '{"messages":[{"role":"user","content":"@agent I need help with my invoice charges"}]}'
 ```
 
-Check logs to see which specialist handled the request.
+The response ends with a short line like `([routedTo] | escalated: yes/no)`. Check logs to see which specialist handled the request.
 
 ## How it works
 
@@ -42,7 +42,7 @@ Check logs to see which specialist handled the request.
 
 ## API
 
-- POST `/api/agents/relay/generate` — Chat with the orchestrator and receive routed responses
+- POST `/api/agents/orchestratorAgent/generate` — Chat with the orchestrator and receive routed responses
 
 Expected local base: `http://localhost:4111/api`
 
@@ -61,8 +61,8 @@ Expected local base: `http://localhost:4111/api`
 ## Connect to CometChat
 
 1) In CometChat Dashboard → AI Agents, set Provider = Mastra
-2) Agent ID = `relay`
-3) Deployment URL = your public `/api/agents/relay/generate`
+2) Agent ID = `orchestratorAgent`
+3) Deployment URL = your public `/api/agents/orchestratorAgent/generate`
 4) Enable and save
 
 ## Security checklist
