@@ -64,7 +64,7 @@ Classifies intent and routes to specialist agents (billing, support, tech suppor
 
 - Folder: `mastra-orchestrator-agent/`
 - Key endpoint: `/api/agents/orchestratorAgent/generate`
-- Docs: [Build Your Multi-agent Orchestration Agent with Mastra](https://www.cometchat.com/docs/ai-agents/mastra-coordinator-agent)
+- Docs: [Build Your Orchestrator Agent with Mastra](https://www.cometchat.com/docs/ai-agents/mastra-orchestrator-agent)
 
 ## Common tips
 
