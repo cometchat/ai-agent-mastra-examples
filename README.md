@@ -7,7 +7,7 @@ This repository contains four Mastra-based AI agent examples integrated with Com
 - `mastra-knowledge-agent/` — Retrieval-augmented agent that answers from your docs with citations
 - `mastra-frontend-actions-agent/` — Agent that triggers UI actions (e.g., confetti) via frontend tools
 - `mastra-backend-tools-agent/` — Agent that performs secure server-side actions using tools
-- `mastra-coordinator-agent/` — Relay/orchestrator that routes to specialist agents
+- `mastra-orchestrator-agent/` — Orchestrator that routes to specialist agents
 
 ## Prerequisites
 
@@ -18,9 +18,10 @@ This repository contains four Mastra-based AI agent examples integrated with Com
 
 ## Quickstart (any sample)
 
-1. Install dependencies and start the dev server:
+1. Change directory into a sample, install dependencies, and start the dev server:
 
 ```bash
+cd <one-of-the-sample-folders>
 npm install
 npx mastra dev
 ```
@@ -57,12 +58,12 @@ Invokes secure server-side tools (e.g., deals API) and summarizes results for ch
 - Key endpoint: `/api/agents/deals/generate`
 - Docs: [Build Your Backend Tools Agent with Mastra](https://www.cometchat.com/docs/ai-agents/mastra-backend-tools-agent)
 
-### Coordinator (Relay) Agent
+### Orchestrator Agent
 
 Classifies intent and routes to specialist agents (billing, support, tech support, manager, human rep).
 
-- Folder: `mastra-coordinator-agent/`
-- Key endpoint: `/api/agents/relay/generate`
+- Folder: `mastra-orchestrator-agent/`
+- Key endpoint: `/api/agents/orchestratorAgent/generate`
 - Docs: [Build Your Multi-agent Orchestration Agent with Mastra](https://www.cometchat.com/docs/ai-agents/mastra-coordinator-agent)
 
 ## Common tips
