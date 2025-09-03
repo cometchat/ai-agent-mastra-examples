@@ -13,6 +13,8 @@ This folder contains:
 - `src/` — Agent, tools, a lightweight server (`src/server.ts`).
 - `web/` — Static site that looks like a PH page, with a chat widget and confetti.
 
+Live demo: [cometchat.github.io/ai-agent-mastra-examples/product-hunt-agent/web](https://cometchat.github.io/ai-agent-mastra-examples/product-hunt-agent/web/)
+
 ## Quick Start (local)
 
 Prereqs: Node 20+.
@@ -88,4 +90,8 @@ CORS is enabled for demo usage.
 ## Make it Public
 
 This app is self-contained. Make the repo public (or copy this folder to a new public repo) to share the source code.
+
+## Docs
+
+- Guide: `docs/mastra-product-hunt-agent.md` — Step-by-step on building, running, wiring frontend actions, and connecting with CometChat.
 
