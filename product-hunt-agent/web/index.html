@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Top Products Launching Today — Mock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg: #f6f7f9;
+        --text: #1f2328;
+        --muted: #5c6670;
+        --border: #e6e8eb;
+        --card: #ffffff;
+        --ph: #da552f;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); }
+      a { color: inherit; text-decoration: none; }
+      .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+      /* Header */
+      .topbar { position: sticky; top: 0; z-index: 30; background: var(--card); border-bottom: 1px solid var(--border); }
+      .row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; padding: 10px 0; }
+      .brand { display: flex; align-items: center; gap: 12px; }
+      .brand .p { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--ph); font-weight: 800; }
+      .searchbar { display:flex; align-items:center; gap:8px; }
+      .search { flex: 1; display:flex; align-items:center; gap:8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); max-width: 460px; }
+      .search input { border: none; outline: none; flex: 1; font: inherit; color: var(--text); }
+      .nav { display: flex; gap: 18px; margin-left: 16px; color: var(--muted); font-size: 14px; }
+      .nav a:hover { color: var(--text); }
+      .actions { display:flex; gap: 10px; }
+      .btn { padding: 8px 12px; border-radius: 999px; border: 1px solid var(--border); background: #fff; font-weight: 600; cursor: pointer; }
+      .btn.ghost { background: #fff; }
+      .btn.primary { background: #ff5c36; color: #fff; border-color: #ff5c36; }
+
+      /* Layout */
+      .main { padding: 20px 0 40px; }
+      .grid { display:grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+
+      /* Welcome banner */
+      .banner { background: #fff6ef; border: 1px solid #ffe5d6; color:#6f4b3b; padding: 12px 14px; border-radius: 12px; display:flex; align-items:center; gap: 12px; }
+      .banner .icon { width: 28px; height: 28px; border-radius: 50%; display:grid; place-items:center; background: #ffe9dc; color:#b36b4e; }
+      .banner .close { margin-left:auto; width:28px; height:28px; border-radius:50%; border: 1px solid #ffd8c2; background:#fff; color:#b36b4e; display:grid; place-items:center; cursor:pointer; }
+
+      /* Section title */
+      h2 { font-size: 22px; margin: 20px 0 10px; }
+
+      /* Product list */
+      .list { display:flex; flex-direction: column; gap: 8px; }
+      .item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; display:grid; grid-template-columns: auto auto 1fr auto; align-items:start; gap: 14px; }
+      .idx { width: 26px; text-align: right; font-weight: 700; color:#2b3645; }
+      .logo { width: 44px; height: 44px; border-radius: 12px; display:grid; place-items:center; font-weight: 800; color:#fff; background: #7c5cff; overflow: hidden; }
+      .logo img, .logo svg { width: 100%; height: 100%; display: block; }
+      .content { min-width: 0; }
+      .title { font-weight: 700; }
+      .subtitle { color: var(--muted); margin-top: 4px; }
+      .tags { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; color: var(--muted); font-size: 13px; }
+      .dot::before { content: '·'; margin-right: 10px; color: #a0a8b0; }
+      .stats { display:flex; gap: 10px; align-items:center; }
+      .chip { display:flex; gap: 8px; align-items:center; padding: 8px 10px; border-radius: 12px; border: 1px solid var(--border); min-width: 64px; justify-content:center; color:#2b3645; }
+      .chip svg { width: 16px; height: 16px; color:#6b7785; }
+      .item { position: relative; }
+      .item .item-overlay { position: absolute; inset: 0; z-index: 1; border-radius: 12px; }
+
+      /* Sidebar */
+      .side { position: sticky; top: 72px; display:flex; flex-direction:column; gap: 14px; }
+      .box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+      .box h3 { margin: 0 0 10px; font-size: 16px; }
+      .thread { display:flex; flex-direction:column; gap: 4px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+      .thread:last-child { border-bottom: 0; }
+      .channel { color: #748190; font-size: 13px; }
+      .ttitle { font-weight: 600; }
+      .tmeta { color: #748190; font-size: 13px; display:flex; gap: 12px; align-items:center; }
+      .pill-link { display:grid; place-items:center; padding: 10px; border:1px solid var(--border); background:#fff; color:#2b3645; border-radius: 12px; font-weight:600; }
+
+      /* Blur non-CometChat products and trending items */
+      .list .item:not(:first-child) { filter: blur(4px); opacity: 0.85; pointer-events: none; user-select: none; }
+      .side .box .thread, .side .box .pill-link { filter: blur(4px); opacity: 0.85; pointer-events: none; user-select: none; }
+
+      /* Toast */
+      .toast { position: fixed; left: 18px; bottom: 18px; background: #111827; color: #fff; border-radius: 10px; padding: 10px 12px; font-size: 14px; line-height: 1.35; box-shadow: 0 10px 30px rgba(0,0,0,.2); opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .2s ease, transform .2s ease; max-width: 360px; z-index: 1000; }
+      .toast.show { opacity: 1; transform: translateY(0); }
+
+      /* Footer */
+      .footer { color:#798391; font-size: 13px; padding: 18px 0; }
+
+      @media (max-width: 980px){
+        .grid { grid-template-columns: 1fr; }
+        .side { position: static; }
+      }
+    </style>
+    <!-- CometChat Visual Builder (No-Code) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@cometchat/chat-embed@latest/dist/main.js"></script>
+    <script>
+      // Base URL for our Product Hunt Agent API
+      window.PH_AGENT_API = window.PH_AGENT_API || (location.origin.includes('github.io') ? 'https://your-server.example.com' : 'http://localhost:8787');
+    </script>
+    <script>
+      // --- CometChat Credentials ---
+      const COMETCHAT_CREDENTIALS = {
+        appID: "280833fdbfc2ef3b",
+        appRegion: "us",
+        authKey: "9762f51fb296e579cb4a268099e40c2bcde5c4ae",
+      };
+
+      // --- Tool Handlers ---
+      function normalizeArgs(args){
+        if (typeof args === 'string') {
+          try { return JSON.parse(args); } catch { return { value: args }; }
+        }
+        return (typeof args === 'object' && args) ? args : {};
+      }
+
+      // Confetti tool
+      function handleConfetti(args){
+        let cfg = normalizeArgs(args);
+        const defaults = {
+          particleCount: 180,
+          spread: 90,
+          startVelocity: 45,
+          ticks: 200,
+          origin: { x: 0.5, y: 0.5 },
+          colors: ['#ff577f','#ff884b','#ffd384','#fff9b0','#00c2ff','#7b5cff']
+        };
+        const finalCfg = {
+          ...defaults,
+          ...cfg,
+          origin: {
+            x: (cfg.origin && typeof cfg.origin.x === 'number') ? cfg.origin.x : defaults.origin.x,
+            y: (cfg.origin && typeof cfg.origin.y === 'number') ? cfg.origin.y : defaults.origin.y,
+          }
+        };
+        loadConfetti().then(c => {
+          if (!c) return fallbackConfetti();
+          c({
+            particleCount: finalCfg.particleCount,
+            spread: finalCfg.spread,
+            startVelocity: finalCfg.startVelocity,
+            origin: finalCfg.origin,
+            colors: finalCfg.colors,
+            ticks: finalCfg.ticks,
+          });
+          console.log('[Confetti] Fired', finalCfg);
+        });
+        return { ok: true };
+      }
+
+      function loadConfetti(){
+        return new Promise(resolve => {
+          if (window.confetti) return resolve(window.confetti);
+          const existing = document.querySelector('script[data-confetti]');
+          if (existing) {
+            existing.addEventListener('load', () => resolve(window.confetti));
+            return;
+          }
+          const s = document.createElement('script');
+          s.dataset.confetti = 'true';
+          s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js';
+          s.onload = () => resolve(window.confetti);
+          s.onerror = () => { console.warn('[Confetti] Failed to load library, using fallback'); resolve(null); };
+          document.head.appendChild(s);
+        });
+      }
+
+      function fallbackConfetti(){
+        const existing = document.getElementById('fallback-confetti-canvas');
+        const canvas = existing || Object.assign(document.body.appendChild(document.createElement('canvas')), { id: 'fallback-confetti-canvas' });
+        canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999';
+        canvas.width = innerWidth; canvas.height = innerHeight;
+        const ctx = canvas.getContext('2d');
+        const pieces = Array.from({length:100}, () => ({ x: Math.random()*canvas.width, y: -20-Math.random()*canvas.height, r: 4+Math.random()*5, c: `hsl(${Math.random()*360},90%,60%)`, vy: 2+Math.random()*3, vx: -1+Math.random()*2 }));
+        let frames = 0; (function loop(){ frames++; if(frames>240) return; requestAnimationFrame(loop); ctx.clearRect(0,0,canvas.width,canvas.height); pieces.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.y>canvas.height) p.y=-10; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,p.r,p.r); }); })();
+      }
+
+      // --- CometChat Launch Options ---
+      const COMETCHAT_LAUNCH_OPTIONS = {
+        targetElementID: 'cometChatMount',  // Element ID to mount the widget
+        isDocked: true, // floating bubble
+        width: '350px',
+        height: '550px',
+        chatType: 'user',
+        defaultChatID: '36735525-0266-4405-96c1-509afa10c334',
+        variantID: '68b5727f5b631d82aa900be4',
+        aiAssistantTools: { 
+          // Support both naming conventions
+          'confettiTool': handleConfetti,
+          'confetti-tool': handleConfetti,
+        },
+      };
+
+      const COMETCHAT_USER_UID = 'cometchat-uid-2';
+
+      window.addEventListener('DOMContentLoaded', () => {
+        if (!window.CometChatApp) {
+          console.error('[CometChat] Embed script not loaded');
+          return;
+        }
+        CometChatApp.init(COMETCHAT_CREDENTIALS)
+          .then(() => CometChatApp.login({ uid: COMETCHAT_USER_UID }))
+          .then(() => CometChatApp.launch(COMETCHAT_LAUNCH_OPTIONS))
+          .then(() => { console.log('[CometChat] Chat launched!'); })
+          .catch((error) => { console.error('[CometChat] Error:', error); });
+      });
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container row">
+        <div class="brand">
+          <span class="p">P</span>
+          <div class="searchbar">
+            <div class="search">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input placeholder="Search (⌘ + k)" />
+            </div>
+            <nav class="nav">
+              <a href="#" data-demo-nav>Launches ▾</a>
+              <a href="#" data-demo-nav>Products ▾</a>
+              <a href="#" data-demo-nav>News ▾</a>
+              <a href="#" data-demo-nav>Forums ▾</a>
+              <a href="#" data-demo-nav>Advertise</a>
+            </nav>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" data-demo-nav>Subscribe</button>
+          <a class="btn primary" href="#" data-demo-nav>Sign in</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container main">
+      <div class="grid">
+        <section>
+          <div class="banner">
+            <div class="icon">🏆</div>
+            <div>
+              <strong>Welcome to Product Hunt!</strong>
+              <div class="subtitle">The place to launch and discover new tech products. <a href="#" style="color:#e04c2f; font-weight:600;" data-demo-nav>Take a tour.</a></div>
+            </div>
+            <button class="close" aria-label="Dismiss">×</button>
+          </div>
+
+          <h2>Top Products Launching Today</h2>
+          <div class="list">
+            <!-- 1: CometChat (real) -->
+            <article class="item" data-cometchat-item>
+              <div class="idx">1.</div>
+              <div class="logo" style="background:#000">
+                <img alt="CometChat logo" src="./cometchat-logo.png"
+                     onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect rx=\'32\' width=\'200\' height=\'200\' fill=\'%23000\'/%3E%3Cpath d=\'M58 60c0-8.837 7.163-16 16-16h48a8 8 0 0 1 8 8v22c0 4.418-3.582 8-8 8H94l-14 14v-14H74c-8.837 0-16-7.163-16-16V60z\' fill=\'%23fff\'/%3E%3Cpath d=\'M138 128c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36c12.23 0 22.998 6.194 29.373 15.6l-16.08 10.72C111.827 113.2 105.28 110 98 110c-11.046 0-20 8.954-20 20s8.954 20 20 20c8.284 0 15.274-5.04 18.29-12.2H102v-16h36v6.2z\' fill=\'%23fff\'/%3E%3C/svg%3E';" />
+              </div>
+              <div class="content">
+                <div class="title"><a href="https://cometchat.com/" target="_blank" rel="noopener">CometChat</a></div>
+                <div class="subtitle">In-app chat, voice & video for web and mobile.</div>
+                <div class="tags">
+                  <span>Communication</span><span class="dot"></span><span>SDK</span><span class="dot"></span><span>Artificial Intelligence</span>
+                </div>
+              </div>
+              <div class="stats">
+                <div class="chip" title="Upvotes">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 4l6 8H6l6-8Z"/></svg>
+                  <span>1,356</span>
+                </div>
+                <div class="chip" title="Comments">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg>
+                  <span>932</span>
+                </div>
+              </div>
+              <a class="item-overlay" href="https://cometchat.com/" target="_blank" rel="noopener" aria-label="Open CometChat"></a>
+            </article>
+
+            <!-- 2: Dummy -->
+            <article class="item">
+              <div class="idx">2.</div>
+              <div class="logo" style="background:#4aa7ff">D1</div>
+              <div class="content">
+                <div class="title">Dummy Product One</div>
+                <div class="subtitle">Backend and frontend for your AI agents.</div>
+                <div class="tags"><span>Slack</span><span class="dot"></span><span>Developer Tools</span><span class="dot"></span><span>Artificial Intelligence</span></div>
+              </div>
+              <div class="stats">
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 4l6 8H6l6-8Z"/></svg><span>33</span></div>
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg><span>416</span></div>
+              </div>
+            </article>
+
+            <!-- 3: Dummy -->
+            <article class="item">
+              <div class="idx">3.</div>
+              <div class="logo" style="background:#00c2a8">D2</div>
+              <div class="content">
+                <div class="title">Dummy Product Two</div>
+                <div class="subtitle">AI avatars that truly act like humans.</div>
+                <div class="tags"><span>Artificial Intelligence</span><span class="dot"></span><span>Photo & Video</span><span class="dot"></span><span>Social marketing</span></div>
+              </div>
+              <div class="stats">
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 4l6 8H6l6-8Z"/></svg><span>55</span></div>
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg><span>341</span></div>
+              </div>
+            </article>
+
+            <!-- 4: Dummy -->
+            <article class="item">
+              <div class="idx">4.</div>
+              <div class="logo" style="background:#22b8cf">D3</div>
+              <div class="content">
+                <div class="title">Dummy Product Three</div>
+                <div class="subtitle">Cursor for sales teams.</div>
+                <div class="tags"><span>Sales</span><span class="dot"></span><span>SaaS</span><span class="dot"></span><span>Artificial Intelligence</span></div>
+              </div>
+              <div class="stats">
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 4l6 8H6l6-8Z"/></svg><span>50</span></div>
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg><span>256</span></div>
+              </div>
+            </article>
+
+            <!-- 5: Dummy -->
+            <article class="item">
+              <div class="idx">5.</div>
+              <div class="logo" style="background:#1f2937">D4</div>
+              <div class="content">
+                <div class="title">Dummy Product Four</div>
+                <div class="subtitle">Design anything with one prompt.</div>
+                <div class="tags"><span>Design Tools</span><span class="dot"></span><span>Artificial Intelligence</span><span class="dot"></span><span>Design</span></div>
+              </div>
+              <div class="stats">
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 4l6 8H6l6-8Z"/></svg><span>15</span></div>
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg><span>236</span></div>
+              </div>
+            </article>
+
+            <!-- 6: Dummy -->
+            <article class="item">
+              <div class="idx">6.</div>
+              <div class="logo" style="background:#8b5cf6">D5</div>
+              <div class="content">
+                <div class="title">Dummy Product Five</div>
+                <div class="subtitle">Delegate tasks and track progress.</div>
+                <div class="tags"><span>Productivity</span><span class="dot"></span><span>Developer Tools</span><span class="dot"></span><span>Artificial Intelligence</span></div>
+              </div>
+              <div class="stats">
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 4l6 8H6l6-8Z"/></svg><span>12</span></div>
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg><span>195</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <aside class="side">
+          <div class="box">
+            <h3>Trending Forum Threads</h3>
+            <div class="thread">
+              <div class="channel">p/hippocam</div>
+              <div class="ttitle">HippoCam v25.9.1 — Now with Siri & Spotlight Support!</div>
+              <div class="tmeta">
+                <span>Upvote (14)</span>
+                <span>•</span>
+                <span>0</span>
+              </div>
+            </div>
+            <div class="thread">
+              <div class="channel">p/producthunt</div>
+              <div class="ttitle">Hiring? Looking for work? [Startup Roles September 2025]</div>
+              <div class="tmeta"><span>Upvote (27)</span><span>•</span><span>10</span></div>
+            </div>
+            <div class="thread">
+              <div class="channel">s/p/slashit-app</div>
+              <div class="ttitle">Stop Rewriting Onboarding Emails — Use Dynamic Templates Instead</div>
+              <div class="tmeta"><span>Upvote (24)</span><span>•</span><span>0</span></div>
+            </div>
+            <div class="thread">
+              <div class="channel">p/general</div>
+              <div class="ttitle">How much are you willing to pay for influencer promotion?</div>
+              <div class="tmeta"><span>Upvote (37)</span><span>•</span><span>44</span></div>
+            </div>
+            <div class="thread">
+              <div class="channel">p/launch-threads</div>
+              <div class="ttitle">Share your best launch day tips</div>
+              <div class="tmeta"><span>Upvote (19)</span><span>•</span><span>7</span></div>
+            </div>
+            <div class="thread">
+              <div class="channel">p/design</div>
+              <div class="ttitle">Favorite icon packs for 2025?</div>
+              <div class="tmeta"><span>Upvote (22)</span><span>•</span><span>12</span></div>
+            </div>
+            <a class="pill-link" href="#">View all</a>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="footer">
+        Static mock page for layout reference. Not affiliated with Product Hunt.
+      </footer>
+    </main>
+    <!-- CometChat mount point (for docked widget this can be empty) -->
+    <div id="cometChatMount"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      function showToast(message) {
+        const el = document.getElementById('toast');
+        if (!el) return;
+        el.textContent = message;
+        el.classList.add('show');
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => el.classList.remove('show'), 4000);
+      }
+
+      function demoToast(e) {
+        if (e) e.preventDefault();
+        showToast("This is a demo, so navigation isn’t functional. Please click the Product Hunt icon in the bottom-right corner to start a chat with our AI Agent.");
+        return false;
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-demo-nav]').forEach((el) => el.addEventListener('click', demoToast));
+        const cc = document.querySelector('[data-cometchat-item]');
+        if (cc) cc.addEventListener('click', () => window.open('https://cometchat.com/', '_blank'));
+      });
+    </script>
+  </body>
+  </html>
