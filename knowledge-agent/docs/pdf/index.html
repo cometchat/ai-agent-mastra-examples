@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Knowledge Agent</title>
+  <style>
+    :root {
+      --cc-bg-gradient: radial-gradient(circle at 40% 20%, #ffffff, #f5f7fb 55%, #eef2f7);
+      --cc-surface: #ffffff;
+      --cc-border: #e2e8f0;
+      --cc-border-strong: #cbd5e1;
+      --cc-text: #0f172a;
+      --cc-text-soft: #475569;
+      --cc-text-faint: #64748b;
+  /* Updated accent to requested rgba(104,82,214,1) */
+  --cc-accent: rgba(104,82,214,1);
+  --cc-accent-gradient: rgba(104,82,214,1); /* using solid color per requirement */
+  --cc-accent-soft: rgba(104,82,214,0.14);
+      --cc-focus: 0 0 0 3px rgba(99,91,255,.35);
+      --cc-radius-sm: 6px;
+      --cc-radius-md: 14px;
+      --cc-radius-lg: 22px;
+      --cc-shadow-sm: 0 1px 2px rgba(15,23,42,0.06), 0 0 0 1px rgba(15,23,42,0.04);
+      --cc-shadow-card: 0 4px 12px -2px rgba(15,23,42,.08), 0 12px 40px -8px rgba(15,23,42,.12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; color: var(--cc-text); background: var(--cc-bg-gradient); -webkit-font-smoothing: antialiased; }
+    header { display:flex; align-items:center; justify-content:center; padding: 20px 18px 10px; }
+    header .brand { font-size: 15px; font-weight:600; letter-spacing:.25px; color: var(--cc-text-soft); text-transform: uppercase; }
+    .container { max-width: 1040px; margin: 0 auto; padding: 8px 24px 48px; }
+    .hero { text-align: center; padding: 8px 0 18px; }
+  .hero h1 { font-size: clamp(40px,7vw,62px); line-height:1.04; margin: 10px 0 14px; font-weight:800; letter-spacing:-.02em; background: linear-gradient(90deg,#0f172a,#334155); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .hero h1 .tag { display:inline-block; background: var(--cc-accent-gradient); color:#fff; padding: 3px 12px 4px; border-radius: 12px; font-size:.55em; position:relative; top:-4px; box-shadow:0 4px 14px -4px rgba(125,91,255,.5); }
+    .hero p { max-width: 760px; margin: 0 auto; color: var(--cc-text-soft); font-size:17px; line-height:1.45; }
+
+    .dz-wrap { margin-top: 34px; background: var(--cc-surface); border-radius: var(--cc-radius-lg); padding: 34px 36px 40px; box-shadow: var(--cc-shadow-card); position:relative; overflow:hidden; }
+    .dz-wrap:before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 85% 15%,rgba(125,91,255,.18),transparent 60%); pointer-events:none; }
+    .dropzone { position: relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 18px; min-height: 360px; border-radius: 20px; border: 2px dashed var(--cc-border-strong); background: linear-gradient(145deg,#fafbff,#f4f6fb); outline: 0; transition: .25s ease border-color,.25s ease background,.25s ease transform; cursor: pointer; }
+    .dropzone:hover { border-color: var(--cc-accent); background: linear-gradient(145deg,#f9f9ff,#f1f4fb); }
+    .dropzone.dragover { border-color: var(--cc-accent); background: linear-gradient(145deg,#f3f1ff,#ecefff); box-shadow:0 0 0 4px var(--cc-accent-soft); }
+    .dropzone:focus-within { border-color: var(--cc-accent); box-shadow: var(--cc-focus); }
+    .dropzone input { display:none; }
+    .file-icon { width: 80px; height: 80px; border-radius: 22px; display:grid; place-items:center; background: linear-gradient(135deg,#ffffff,#f1f5f9); border: 1px solid var(--cc-border); box-shadow: var(--cc-shadow-sm); }
+    .file-icon svg { width: 44px; height: 44px; stroke: var(--cc-text-faint); }
+    .title { font-size: 24px; font-weight: 700; color: var(--cc-text); letter-spacing:-.5px; }
+    .subtitle { color: var(--cc-text-faint); font-size: 14px; }
+  .btn { display:inline-flex; align-items:center; gap:.55rem; background: var(--cc-accent); color:#fff; border:none; padding: 13px 22px 14px; border-radius: 999px; font-weight:600; font-size:15px; letter-spacing:.3px; box-shadow:0 14px 34px -12px rgba(104,82,214,.55),0 4px 10px -4px rgba(104,82,214,.35); cursor:pointer; position:relative; overflow:hidden; transition: .25s ease box-shadow,.25s ease transform,.25s ease background; }
+    .btn:before { content:""; position:absolute; inset:0; background:linear-gradient(120deg,rgba(255,255,255,.15),rgba(255,255,255,0)); opacity:.8; mix-blend-mode:overlay; pointer-events:none; }
+  .btn:hover { transform:translateY(-2px); background: linear-gradient(90deg, rgba(104,82,214,1) 0%, rgba(120,97,230,1) 100%); box-shadow:0 18px 38px -14px rgba(104,82,214,.6),0 6px 14px -6px rgba(104,82,214,.4); }
+  .btn:active { transform:translateY(0); background: rgba(98,76,205,1); box-shadow:0 10px 22px -10px rgba(104,82,214,.55); }
+    .btn:focus-visible { outline:none; box-shadow:var(--cc-focus); }
+    .btn svg { width:18px; height:18px; }
+    .status { margin-top: 16px; font-size: 13px; color: var(--cc-text-faint); min-height: 20px; text-align:center; }
+
+    .actions { display:flex; justify-content:center; gap: 14px; margin-top: 18px; }
+    .link { color: var(--cc-accent); text-decoration:none; font-weight:600; position:relative; }
+    .link:after { content:""; position:absolute; left:0; bottom:-2px; height:2px; width:100%; background:var(--cc-accent-gradient); transform:scaleX(.4); transform-origin:left; transition:.25s ease transform; }
+    .link:hover:after { transform:scaleX(1); }
+    .link:focus-visible { outline:none; box-shadow:var(--cc-focus); border-radius:4px; }
+  /* Secondary button variant for navigation/action links */
+  .link-btn { background: var(--cc-accent); padding: 11px 20px 12px; border-radius: 999px; font-weight:600; font-size:14px; color:#fff; box-shadow:0 10px 28px -12px rgba(104,82,214,.55),0 2px 8px -4px rgba(104,82,214,.35); transition:.25s ease background,.25s ease transform,.25s ease box-shadow; display:inline-flex; align-items:center; gap:6px; }
+  .link-btn:hover { background: linear-gradient(90deg, rgba(104,82,214,1) 0%, rgba(120,97,230,1) 100%); transform:translateY(-2px); box-shadow:0 14px 34px -14px rgba(104,82,214,.6),0 6px 14px -6px rgba(104,82,214,.4); }
+  .link-btn:active { transform:translateY(0); background: rgba(98,76,205,1); box-shadow:0 8px 20px -10px rgba(104,82,214,.55); }
+  .link-btn:focus-visible { outline:none; box-shadow:var(--cc-focus); }
+  .link-btn:after { display:none; }
+
+    footer { text-align:center; font-size: 12px; color: var(--cc-text-faint); padding: 40px 0 60px; }
+    @media (max-width: 720px){
+      .dz-wrap { padding:26px 22px 34px; }
+      .dropzone { min-height:300px; }
+      .hero h1 { font-size: clamp(34px,10vw,52px); }
+      .hero p { font-size:15px; }
+      .file-icon { width:70px; height:70px; border-radius:18px; }
+      .file-icon svg { width:38px; height:38px; }
+      .title { font-size:21px; }
+    }
+  </style>
+  <script>
+    window.API_BASE_URL = window.API_BASE_URL || (location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://YOUR-BACKEND-URL');
+  </script>
+  <meta name="robots" content="noindex" />
+  <meta name="color-scheme" content="light" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style> body{ font-family: Inter,system-ui,Arial; } </style>
+  </head>
+<body>
+  <header>
+    <div class="brand">PDF Knowledge Agent</div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Chat with any <span class="tag">PDF</span></h1>
+      <p>Join students, researchers and professionals to instantly answer questions and understand documents using AI. Upload a PDF to get started.</p>
+    </section>
+
+    <section class="dz-wrap">
+      <label class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept="application/pdf" />
+        <div class="file-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="#94a3b8" stroke-width="1.5" />
+            <path d="M14 2v6h6" stroke="#94a3b8" stroke-width="1.5" />
+            <path d="M8 15h8M8 12h8M8 18h5" stroke="#6366f1" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="title">Click to upload, or drag PDF here</div>
+        <div class="subtitle">Max ~10MB • PDF only</div>
+        <div class="actions">
+          <button class="btn" id="uploadBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0 4 4m-4-4-4 4M6 16h12a2 2 0 0 1 2 2v2a0 0 0 0 1 0 0H4a0 0 0 0 1 0 0v-2a2 2 0 0 1 2-2Z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Upload PDF
+          </button>
+        </div>
+        <div class="status" id="status"></div>
+      </label>
+    </section>
+
+    <div class="actions" style="margin-top:18px;">
+      <a class="link link-btn" href="/pdf/demo.html">Open Document Workspace</a>
+    </div>
+  </main>
+
+  <footer>
+    Demo UI inspired by provided design references. Backend at <code id="apiBase"></code>.
+  </footer>
+
+  <script>
+    const dz = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const statusEl = document.getElementById('status');
+    const apiBaseEl = document.getElementById('apiBase');
+    if (apiBaseEl) apiBaseEl.textContent = window.API_BASE_URL;
+
+    function setStatus(msg, good){ statusEl.textContent = msg || ''; statusEl.style.color = good ? '#065f46' : '#475569'; }
+
+    function handleFiles(files){
+      if (!files || !files.length) return;
+      const f = files[0];
+      const isPdfMime = typeof f.type === 'string' && /pdf$/i.test(f.type);
+      const isPdfName = typeof f.name === 'string' && f.name.toLowerCase().endsWith('.pdf');
+      if (!isPdfMime && !isPdfName) { setStatus('Please choose a PDF file.'); return; }
+      const body = new FormData(); body.append('file', f);
+      setStatus('Uploading and processing…');
+      fetch(`${window.API_BASE_URL}/api/upload`, { method: 'POST', body })
+        .then(r => r.json())
+        .then(data => {
+          if (data.error) throw new Error(data.error);
+          setStatus('Uploaded ✓ Redirecting to workspace…', true);
+          setTimeout(() => { window.location.href = `/pdf/demo.html?docId=${encodeURIComponent(data.docId)}`; }, 500);
+        })
+        .catch(err => setStatus(err.message || 'Upload failed'));
+    }
+
+    fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+    uploadBtn.addEventListener('click', () => fileInput.click());
+    dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+    dz.addEventListener('drop', (e) => { e.preventDefault(); dz.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+  </script>
+</body>
+</html>
+

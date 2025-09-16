@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Knowledge Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Light Theme */
+    :root { --bg:#f7f9fc; --surface:#ffffff; --surface-2:#f1f5f9; --text:#111827; --muted:#64748b; --border:#e2e8f0; --accent:#2563eb; --accent-hover:#1d4ed8; --danger:#dc2626; --radius:10px; --shadow:0 2px 4px rgba(0,0,0,.06),0 4px 14px -6px rgba(0,0,0,.08); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, system-ui, Arial, sans-serif; color:var(--text); background:linear-gradient(180deg,#ffffff,#f1f5f9); }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    header { padding:.7rem 1.05rem; background:#ffffff; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:40; box-shadow:var(--shadow); }
+    header h1 { font-size:1rem; margin:0; font-weight:600; letter-spacing:.35px; display:flex; gap:.5rem; align-items:center; }
+    .pill { background:#eef4ff; color:#1d4ed8; padding:.25rem .55rem; font-size:.55rem; border-radius:999px; font-weight:600; }
+    main { display:flex; height:calc(100vh - 60px); }
+    .left,.right { display:flex; flex-direction:column; min-width:0; }
+    .left { width:46vw; max-width:880px; background:var(--surface); border-right:1px solid var(--border); }
+    .right { flex:1; position:relative; background:var(--surface-2); }
+    .hero { padding:1rem 1.15rem .85rem; border-bottom:1px solid var(--border); background:linear-gradient(115deg,#ffffff,#f0f6ff 68%); }
+    .hero h2 { margin:0 0 .45rem; font-size:1.05rem; font-weight:600; letter-spacing:.4px; }
+    .hero p { margin:.2rem 0 0; font-size:.7rem; line-height:1.35; color:var(--muted); }
+    .tagline { display:inline-flex; align-items:center; gap:.35rem; background:#2563eb; color:#fff; font-size:.55rem; padding:.28rem .58rem; border-radius:6px; letter-spacing:.5px; font-weight:500; margin-bottom:.65rem; box-shadow:0 2px 4px rgba(37,99,235,.25); }
+    .panels { display:flex; flex:1; min-height:0; }
+    .doc-manager { width:230px; display:flex; flex-direction:column; border-right:1px solid var(--border); background:var(--surface); transition:width .25s ease; }
+    .doc-manager.collapsed { width:0; overflow:hidden; border-right:none; }
+    .preview-panel { flex:1; display:flex; flex-direction:column; background:var(--surface); }
+    .docs-head { padding:.6rem .75rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); background:#ffffff; }
+    .docs-head span { font-size:.7rem; font-weight:600; color:#111827; }
+    .small-btn, button { font-family:inherit; font-weight:500; letter-spacing:.3px; }
+    .small-btn { background:#fff; color:#1f2937; border:1px solid var(--border); padding:.42rem .6rem; border-radius:6px; font-size:.6rem; cursor:pointer; transition:.15s background,.15s border-color; }
+    .small-btn:hover { background:#f1f5f9; }
+    button { background:var(--accent); color:#fff; border:1px solid var(--accent); padding:.55rem .9rem; border-radius:8px; font-size:.7rem; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.06); }
+    button:hover { background:var(--accent-hover); }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .ghost-btn { background:#eef2ff; border:1px solid #dbe4ff; color:#1d4ed8; }
+    .ghost-btn:hover { background:#e0e9ff; }
+    .danger-btn { background:var(--danger); border-color:var(--danger); color:#fff; }
+    .filter-bar { padding:.55rem .7rem; display:flex; gap:.55rem; align-items:center; border-top:1px solid var(--border); background:#f8fafc; }
+    .filter-bar input { flex:1; padding:.46rem .6rem; font-size:.65rem; border:1px solid var(--border); border-radius:6px; background:#fff; color:#111827; }
+    .filter-bar input:focus { outline:2px solid #bfdbfe; border-color:#93c5fd; }
+    .doc-list { flex:1; overflow:auto; padding:.65rem .75rem 1rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:.65rem; background:linear-gradient(180deg,#ffffff,#f7f9fc); }
+    .doc-card { position:relative; background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:.55rem .6rem .75rem; display:flex; flex-direction:column; gap:.4rem; cursor:pointer; transition:border-color .18s, box-shadow .18s, transform .15s; box-shadow:0 2px 4px rgba(0,0,0,.04); }
+    .doc-card:hover { border-color:#cbd5e1; box-shadow:0 4px 10px -2px rgba(0,0,0,.08); }
+    .doc-card:active { transform:scale(.97); }
+    .doc-card h4 { margin:0; font-size:.63rem; font-weight:600; color:#1e293b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .doc-meta { display:flex; gap:.4rem; color:var(--muted); font-size:.55rem; }
+    .doc-age { position:absolute; top:6px; right:6px; font-size:.5rem; color:#475569; }
+    .delete-btn { background:var(--danger); border:none; color:#fff; padding:.35rem .5rem; font-size:.55rem; border-radius:6px; cursor:pointer; margin-top:.25rem; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+    .delete-btn:hover { filter:brightness(.95); }
+    .preview-head { padding:.65rem .85rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background:#f8fafc; }
+    .preview-head .title { font-size:.85rem; color:#0f172a; font-weight:600; letter-spacing:.3px; }
+    .preview-head .meta { color:var(--muted); font-size:.65rem; }
+    .pdf-frame { flex:1; background:#ffffff; border:none; width:100%; }
+    .hidden { display:none; }
+  .toolbar { display:flex; gap:.45rem; }
+  /* CometChat wrapper (mirrors docs/demo.html) */
+  #chatWidget { flex:1; position:relative; display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:#64748b; padding:0; }
+  </style>
+  <script>
+    window.API_BASE_URL = window.API_BASE_URL || (location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://YOUR-BACKEND-URL');
+  </script>
+</head>
+<body>
+  <header>
+    <h1>PDF Workspace <span class="pill">Single</span></h1>
+    <div class="toolbar">
+      <button id="maximizeBtn" class="small-btn" title="Maximize PDF">Maximize</button>
+      <button id="toggleDocsBtn" class="small-btn" title="Toggle docs">Toggle Docs</button>
+      <a href="/pdf/index.html" class="small-btn" title="Upload">Upload</a>
+    </div>
+  </header>
+  <main>
+    <section class="left">
+      <div class="panels">
+      <aside id="docPanel" class="doc-manager collapsed">
+          <div class="docs-head"><span id="countLabel">Documents</span><div>
+            <button id="refreshBtn" class="small-btn">Refresh</button>
+            <button id="addBtn" class="small-btn">Add</button>
+            <input id="fileInput" type="file" accept="application/pdf" style="display:none" />
+          </div></div>
+          <div class="filter-bar">
+            <input id="filterInput" placeholder="Filter by name or id" />
+          </div>
+          <div id="listWrap" class="doc-list"></div>
+          <div id="emptyState" style="padding:.8rem; color:#9ca3af; display:none;">No documents yet. Upload one to get started.</div>
+        </aside>
+        <section class="preview-panel">
+          <div class="preview-head">
+            <div class="title"><span id="previewLabel">Preview</span> <span id="selectedDocId" style="display:none; font-weight:600; color:#93c5fd;"></span></div>
+            <div class="meta" id="metaEl"></div>
+            <div style="display:flex; gap:.4rem;">
+              <button id="openRawBtn" class="ghost-btn" disabled>Open PDF</button>
+            </div>
+          </div>
+          <iframe id="preview" class="pdf-frame hidden"></iframe>
+        </section>
+      </div>
+    </section>
+    <section class="right flex-col" id="chatPanel">
+      <div id="chatWidget" style="padding:0; position:absolute; inset:0;">
+        <div id="cometChatMount" style="width:100%;height:100%;"></div>
+      </div>
+    </section>
+  </main>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/@cometchat/chat-embed@latest/dist/main.js"></script>
+  <script>
+    const docPanel = document.getElementById('docPanel');
+    const maximizeBtn = document.getElementById('maximizeBtn');
+    const toggleDocsBtn = document.getElementById('toggleDocsBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const addBtn = document.getElementById('addBtn');
+    const fileInput = document.getElementById('fileInput');
+    const filterInput = document.getElementById('filterInput');
+    const listWrap = document.getElementById('listWrap');
+    const emptyState = document.getElementById('emptyState');
+    const preview = document.getElementById('preview');
+    const openRawBtn = document.getElementById('openRawBtn');
+    const previewLabel = document.getElementById('previewLabel');
+    const selectedDocIdEl = document.getElementById('selectedDocId');
+    const metaEl = document.getElementById('metaEl');
+    const countLabel = document.getElementById('countLabel');
+
+    function setStatus(msg){ console.log('[status]', msg); }
+
+    function age(ts) {
+      const then = new Date(ts).getTime(); const diff = Date.now() - then; const mins = Math.floor(diff/60000);
+      if (mins < 60) return mins + 'm'; const hrs = Math.floor(mins/60); if (hrs < 24) return hrs + 'h'; return Math.floor(hrs/24) + 'd';
+    }
+
+    const __qs = new URLSearchParams(location.search);
+    const __docFromQuery = __qs.get('docId');
+
+    async function fetchDocs() {
+      const res = await fetch(`${window.API_BASE_URL}/api/documents`); const data = await res.json();
+      let docs = data.documents || [];
+      if (__docFromQuery) docs = docs.filter(d => d.docId === __docFromQuery);
+      window.__docs = docs; renderDocs();
+    }
+
+    function renderDocs() {
+      const filter = filterInput.value.toLowerCase();
+      let docs = (window.__docs || []);
+      if (filter) docs = docs.filter(d => d.originalName.toLowerCase().includes(filter) || d.docId.includes(filter));
+      listWrap.querySelectorAll('.doc-card').forEach(el=>el.remove());
+      if (!docs.length) { emptyState.style.display='block'; } else emptyState.style.display='none';
+      docs.forEach(d => {
+        const card = document.createElement('div'); card.className='doc-card'; card.setAttribute('data-doc', d.docId);
+        card.innerHTML = `<div class="doc-age">${age(d.createdAt)}</div>`+
+          `<h4 title="${d.originalName}">${d.originalName}</h4>`+
+          `<div class="doc-meta">`+
+            `<span>${d.pages}p</span>`+
+            `<span>${d.chunks}c</span>`+
+            `<span>${new Date(d.createdAt).toLocaleDateString()}</span>`+
+          `</div>`+
+          `<button class="delete-btn" data-del="${d.docId}">Delete</button>`;
+        card.addEventListener('click', (e) => { const t = e.target; if (t && t.getAttribute && t.getAttribute('data-del')) return; selectDoc(d.docId); });
+        listWrap.appendChild(card);
+      });
+      countLabel.textContent = `${docs.length} doc${docs.length!==1?'s':''}`;
+      listWrap.querySelectorAll('[data-del]').forEach(btn => {
+        btn.addEventListener('click', e => { e.stopPropagation(); const id = btn.getAttribute('data-del'); if (!confirm('Delete document '+id+'?')) return; fetch(`${window.API_BASE_URL}/api/documents/${id}`, { method:'DELETE' })
+          .then(r=>r.json()).then(()=> { setStatus('Deleted '+id); fetchDocs(); if (window.__selectedDoc===id) clearPreview(); })
+          .catch(err=> setStatus(err.message||'Delete failed')); });
+      });
+    }
+
+    function clearPreview() { preview.classList.add('hidden'); preview.removeAttribute('src'); metaEl.textContent=''; selectedDocIdEl.style.display='none'; selectedDocIdEl.textContent=''; openRawBtn.disabled = true; window.__selectedDoc = null; previewLabel.textContent='Preview'; }
+
+    function selectDoc(docId) {
+      const doc = (window.__docs||[]).find(d=>d.docId===docId); if (!doc) return; window.__selectedDoc = docId; selectedDocIdEl.textContent = docId; selectedDocIdEl.style.display='inline-block'; previewLabel.textContent = doc.originalName; metaEl.textContent = `${doc.chunks} chunks • ${doc.pages} pages • Created ${new Date(doc.createdAt).toLocaleString()}`; preview.src = `${window.API_BASE_URL}/api/documents/${docId}/file`; preview.classList.remove('hidden'); openRawBtn.disabled = false; openRawBtn.onclick = () => window.open(`${window.API_BASE_URL}/api/documents/${docId}/file`, '_blank'); }
+
+    function handleFiles(files) {
+      if (!files || !files.length) return; const file = files[0]; if (file.type !== 'application/pdf') { setStatus('Please select a PDF file.'); return; }
+      setStatus('Uploading and processing...', false); const formData = new FormData(); formData.append('file', file);
+      fetch(`${window.API_BASE_URL}/api/upload`, { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => { if (data.error) throw new Error(data.error); setStatus('PDF processed successfully ✔', true); const url = new URL(location.href); url.searchParams.set('docId', data.docId); history.replaceState(null, '', url.toString()); fetchDocs().then(()=> selectDoc(data.docId)); })
+        .catch(err => { setStatus(err.message || 'Upload failed'); }); }
+
+    addBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', e => { const t = e.target; handleFiles(t && t.files ? t.files : null); });
+    filterInput.addEventListener('input', () => renderDocs());
+    refreshBtn.addEventListener('click', () => fetchDocs());
+    toggleDocsBtn.addEventListener('click', () => { docPanel.classList.toggle('collapsed'); });
+    maximizeBtn.addEventListener('click', () => { docPanel.classList.add('collapsed'); });
+
+    if (__docFromQuery) {
+      fetchDocs().then(() => selectDoc(__docFromQuery));
+    } else {
+      fetchDocs();
+    }
+
+    // --- CometChat Integration (user-provided snippet) ---
+    const COMETCHAT_CREDENTIALS = {
+      appID: "",
+      appRegion: "",
+      authKey: "",
+    };
+
+    const COMETCHAT_LAUNCH_OPTIONS = {
+      targetElementID: 'cometChatMount',
+      isDocked: false, // embedded (same as main demo)
+      width: '100%',
+      height: '100%',
+      chatType: 'user',
+      defaultChatID: '',
+      variantID: '',
+    };
+
+    const COMETCHAT_USER_UID = "cometchat-uid-1"; // Replace with your actual user UID
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (typeof CometChatApp === 'undefined') { console.error('[CometChat] SDK not loaded'); return; }
+      CometChatApp.init(COMETCHAT_CREDENTIALS)
+        .then(() => {
+          console.log("[CometChat] Initialized successfully");
+          return CometChatApp.login({ uid: COMETCHAT_USER_UID });
+        })
+        .then(user => {
+          console.log("[CometChat] Logged in as:", user);
+          return CometChatApp.launch(COMETCHAT_LAUNCH_OPTIONS);
+        })
+        .then(() => {
+          console.log("[CometChat] Chat launched!");
+        })
+        .catch(error => {
+          console.error("[CometChat] Error:", error);
+        });
+    });
+    // -----------------------------------------------------
+  </script>
+</body>
+</html>

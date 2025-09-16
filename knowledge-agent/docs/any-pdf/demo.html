@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Knowledge Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Light Theme Refresh */
+    :root {
+      --bg:#f7f9fc; --surface:#ffffff; --surface-2:#f1f5f9; --text:#1a1f29; --muted:#64748b; --border:#e2e8f0;
+      --accent:#2563eb; --accent-hover:#1d4ed8; --danger:#dc2626; --radius:10px; --shadow:0 2px 4px rgba(0,0,0,.06),0 4px 16px -6px rgba(0,0,0,.08);
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, system-ui, Arial, sans-serif; color:var(--text); background:linear-gradient(180deg,#ffffff,#f3f6fa); -webkit-font-smoothing:antialiased; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    header { padding:.75rem 1.1rem; background:#ffffff; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50; box-shadow: var(--shadow); }
+    header h1 { font-size:1rem; margin:0; font-weight:600; letter-spacing:.3px; display:flex; gap:.5rem; align-items:center; }
+    .pill { background:#eef4ff; color:#1d4ed8; padding:.25rem .55rem; font-size:.55rem; border-radius:999px; font-weight:600; }
+    main { display:flex; height:calc(100vh - 60px); }
+    .left,.right { display:flex; flex-direction:column; min-width:0; }
+    .left { width:46vw; max-width:880px; background:var(--surface); border-right:1px solid var(--border); }
+    .right { flex:1; position:relative; background:var(--surface-2); }
+    .hero { padding:1rem 1.25rem .9rem; border-bottom:1px solid var(--border); background:linear-gradient(115deg,#ffffff,#f2f7ff 65%); }
+    .hero h2 { margin:0 0 .4rem; font-size:1.08rem; font-weight:600; letter-spacing:.4px; }
+    .hero p { margin:.2rem 0 0; font-size:.7rem; line-height:1.35; max-width:760px; color:var(--muted); }
+    .tagline { display:inline-flex; align-items:center; gap:.35rem; background:#2563eb; color:#fff; font-size:.55rem; padding:.27rem .55rem; border-radius:6px; letter-spacing:.5px; font-weight:500; margin-bottom:.65rem; box-shadow:0 2px 4px rgba(37,99,235,.25); }
+    .panels { display:flex; flex:1; min-height:0; }
+    .doc-manager { width:230px; display:flex; flex-direction:column; border-right:1px solid var(--border); background:var(--surface); transition:width .25s ease; }
+    .doc-manager.collapsed { width:0; overflow:hidden; border-right:none; }
+    .preview-panel { flex:1; display:flex; flex-direction:column; background:var(--surface); }
+    .docs-head { padding:.6rem .75rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); background:#ffffff; }
+    .docs-head span { font-size:.7rem; font-weight:600; color:#111827; letter-spacing:.3px; }
+    .small-btn, button { font-family:inherit; font-weight:500; letter-spacing:.3px; }
+    .small-btn { background:#fff; color:#1f2937; border:1px solid var(--border); padding:.4rem .6rem; border-radius:6px; font-size:.6rem; cursor:pointer; transition:.15s background,.15s border-color; }
+    .small-btn:hover { background:#f1f5f9; }
+    button { background:var(--accent); color:#fff; border:1px solid var(--accent); padding:0.55rem 0.9rem; border-radius:8px; font-size:.7rem; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.06); }
+    button:hover { background:var(--accent-hover); }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .ghost-btn { background:#eef2ff; border:1px solid #dbe4ff; color:#1d4ed8; }
+    .ghost-btn:hover { background:#e0e9ff; }
+    .danger-btn { background:var(--danger); border-color:var(--danger); }
+    .filter-bar { padding:.55rem .7rem; display:flex; gap:.55rem; align-items:center; border-top:1px solid var(--border); background:#f8fafc; }
+    .filter-bar input { flex:1; padding:.45rem .6rem; font-size:.65rem; border:1px solid var(--border); border-radius:6px; background:#fff; color:#111827; }
+    .filter-bar input:focus { outline:2px solid #bfdbfe; border-color:#93c5fd; }
+    .doc-list { flex:1; overflow:auto; padding:.65rem .7rem 1rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:.65rem; background:linear-gradient(180deg,#ffffff,#f8fafc); }
+    .doc-card { position:relative; background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:.55rem .6rem .7rem; display:flex; flex-direction:column; gap:.4rem; cursor:pointer; transition:border-color .18s, box-shadow .18s, transform .15s; box-shadow:0 2px 4px rgba(0,0,0,.04); }
+    .doc-card:hover { border-color:#cbd5e1; box-shadow:0 4px 10px -2px rgba(0,0,0,.08); }
+    .doc-card:active { transform:scale(.97); }
+    .doc-card h4 { margin:0; font-size:.63rem; font-weight:600; line-height:1.25; color:#1e293b; word-break:break-word; }
+    .doc-meta { font-size:.5rem; color:var(--muted); display:flex; flex-wrap:wrap; gap:.35rem; line-height:1.2; }
+    .doc-meta span { background:#f1f5f9; padding:.18rem .35rem; border-radius:4px; border:1px solid #e2e8f0; }
+    .doc-age { position:absolute; top:4px; right:6px; font-size:.48rem; color:#475569; font-weight:500; }
+    .delete-btn { position:absolute; bottom:5px; right:6px; background:var(--danger); border:none; color:#fff; padding:.2rem .4rem; font-size:.5rem; border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+    #emptyState { display:none; padding:1.1rem; font-size:.65rem; color:var(--muted); text-align:center; }
+    .lower-bar { padding:.45rem .75rem; font-size:.55rem; color:var(--muted); display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); background:#f8fafc; }
+    #status { color:#0f766e; }
+    .success { color:#059669 !important; }
+    .preview-head { padding:.6rem .95rem; border-bottom:1px solid var(--border); background:#f8fafc; font-size:.6rem; display:flex; justify-content:space-between; align-items:center; gap:.6rem; position:sticky; top:0; z-index:2; backdrop-filter:saturate(1.4) blur(6px); }
+    .preview-head span { font-weight:600; color:#0f172a; }
+    .view-controls { display:flex; gap:.45rem; align-items:center; }
+    .toggle-btn { background:#fff; border:1px solid var(--border); color:#1e293b; padding:.38rem .65rem; border-radius:6px; font-size:.58rem; cursor:pointer; }
+    .toggle-btn:hover { background:#f1f5f9; }
+    #pdfPreview { flex:1; border:none; width:100%; background:#ffffff; }
+    #pdfPreview.hidden { display:none; }
+    #meta { padding:.55rem .9rem; font-size:.55rem; color:var(--muted); border-top:1px solid var(--border); background:#ffffff; }
+    code#selectedDocId { font-size:.55rem; background:#eef4ff; color:#1d4ed8; padding:.2rem .45rem; border-radius:4px; display:none; }
+    ::-webkit-scrollbar { width: 10px; height:10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d9e4; border-radius: 8px; }
+    ::-webkit-scrollbar-thumb:hover { background: #b9c4d3; }
+    #chatWidget { flex:1; position:relative; display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:#64748b; padding:0; }
+    .design-ref { position:absolute; top:60px; left:16px; z-index:30; }
+    .design-ref button { font-size:.55rem; background:#eef4ff; color:#1d4ed8; border:1px solid #dbe4ff; }
+    .design-ref button:hover { background:#e0e9ff; }
+    .design-ref-panel { position:absolute; top:36px; left:0; width:340px; max-height:70vh; overflow:auto; background:#ffffff; border:1px solid var(--border); border-radius:8px; padding:.6rem .65rem .8rem; display:none; box-shadow:0 4px 22px -4px rgba(0,0,0,.12); }
+    .design-ref-panel img { width:100%; margin-bottom:.6rem; border:1px solid var(--border); border-radius:6px; }
+    @media (max-width: 1100px) { main { flex-direction:column; height:auto; min-height:100vh; } .doc-manager { width:100%; min-height:55vh; border-right:none; border-bottom:1px solid var(--border); } .preview-panel { min-height:50vh; } }
+    @media (max-width: 640px) { .doc-list { grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); } .hero h2 { font-size:1rem; } }
+  </style>
+  <script>
+    window.API_BASE_URL = window.API_BASE_URL || (location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://YOUR-BACKEND-URL');
+  </script>
+</head>
+<body>
+  <header>
+    <h1>PDF Knowledge Agent</h1>
+    <div style="font-size:0.6rem;opacity:0.8;display:flex;align-items:center;gap:.5rem;">Hybrid Retrieval • Multi‑PDF</div>
+  </header>
+  <main>
+    <section class="left">
+      <div class="panels">
+        <div class="doc-manager" id="docPanel">
+          <div class="docs-head">
+            <span>Documents</span>
+            <div style="display:flex; gap:.4rem; align-items:center;">
+              <input type="file" id="fileInput" accept="application/pdf" style="display:none;" />
+              <button id="addBtn" class="small-btn" title="Upload PDF">Upload</button>
+              <button id="refreshBtn" class="small-btn" title="Refresh list">Refresh</button>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <input id="filterInput" placeholder="Filter documents..." />
+            <span id="countLabel" style="font-size:.55rem; white-space:nowrap;">0 docs</span>
+          </div>
+          <div class="doc-list" id="docListWrap">
+            <!-- Cards injected here -->
+            <div id="emptyState">No documents yet. Upload a PDF to get started.</div>
+          </div>
+          <div class="lower-bar">
+            <span style="opacity:.9;">Document Workspace</span>
+            <span id="statusMirror" style="opacity:.9;"></span>
+          </div>
+        </div>
+        <div class="preview-panel">
+          <div class="preview-head">
+            <div class="view-controls">
+              <button class="toggle-btn" id="toggleDocs">Docs</button>
+              <button class="toggle-btn" id="maximize">Maximize</button>
+            </div>
+            <span id="previewLabel">Preview</span>
+            <div style="display:flex; gap:.4rem; align-items:center;">
+              <code id="selectedDocId"></code>
+              <button id="openRawBtn" disabled style="background:#2563eb;font-size:.55rem;padding:.4rem .55rem;">Open PDF</button>
+            </div>
+          </div>
+          <iframe id="pdfPreview" title="PDF preview" class="hidden"></iframe>
+          <div id="meta"></div>
+        </div>
+      </div>
+    </section>
+    <section class="right flex-col" id="chatPanel">
+      <div id="chatWidget" style="padding:0; position:absolute; inset:0;">
+        <div id="cometChatMount" style="width:100%;height:100%;"></div>
+      </div>
+    </section>
+  </main>
+
+  
+
+  <script defer src="https://cdn.jsdelivr.net/npm/@cometchat/chat-embed@latest/dist/main.js"></script>
+  <script>
+    /* --- Element refs (reused by existing logic) --- */
+    const fileInput = document.getElementById('fileInput');
+    const addBtn = document.getElementById('addBtn');
+    const statusEl = document.getElementById('status');
+    const statusMirror = document.getElementById('statusMirror');
+    const countLabel = document.getElementById('countLabel');
+    const previewLabel = document.getElementById('previewLabel');
+    const selectedDocIdEl = document.getElementById('selectedDocId');
+    const openRawBtn = document.getElementById('openRawBtn');
+    const filterInput = document.getElementById('filterInput');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const metaEl = document.getElementById('meta');
+    const preview = document.getElementById('pdfPreview');
+    const listWrap = document.getElementById('docListWrap');
+    const emptyState = document.getElementById('emptyState');
+    const docPanel = document.getElementById('docPanel');
+    const chatPanel = document.getElementById('chatPanel');
+    const toggleDocsBtn = document.getElementById('toggleDocs');
+    const maximizeBtn = document.getElementById('maximize');
+
+    function mirrorStatus(msg, good) {
+      statusMirror.textContent = msg || ''; statusEl.textContent = msg || ''; if (good) { statusEl.classList.add('success'); } else { statusEl.classList.remove('success'); }
+    }
+    function setStatus(msg, good) { mirrorStatus(msg, good); }
+
+    function age(ts) {
+      const then = new Date(ts).getTime(); const diff = Date.now() - then; const mins = Math.floor(diff/60000);
+      if (mins < 60) return mins + 'm'; const hrs = Math.floor(mins/60); if (hrs < 24) return hrs + 'h'; return Math.floor(hrs/24) + 'd';
+    }
+
+    async function fetchDocs() {
+      const res = await fetch(`${window.API_BASE_URL}/api/documents`); const data = await res.json(); window.__docs = data.documents || []; renderDocs(); }
+
+    function renderDocs() {
+      const filter = filterInput.value.toLowerCase(); const docs = (window.__docs || []).filter(d => !filter || d.originalName.toLowerCase().includes(filter) || d.docId.includes(filter));
+      listWrap.querySelectorAll('.doc-card').forEach(el=>el.remove());
+      if (!docs.length) { emptyState.style.display='block'; } else emptyState.style.display='none';
+      docs.forEach(d => {
+        const card = document.createElement('div'); card.className='doc-card'; card.setAttribute('data-doc', d.docId);
+        card.innerHTML = `<div class="doc-age">${age(d.createdAt)}</div>`+
+          `<h4 title="${d.originalName}">${d.originalName}</h4>`+
+          `<div class="doc-meta">`+
+            `<span>${d.pages}p</span>`+
+            `<span>${d.chunks}c</span>`+
+            `<span>${new Date(d.createdAt).toLocaleDateString()}</span>`+
+          `</div>`+
+          `<button class="delete-btn" data-del="${d.docId}">Delete</button>`;
+        card.addEventListener('click', (e) => { const t = e.target; if (t && t.getAttribute && t.getAttribute('data-del')) return; selectDoc(d.docId); });
+        listWrap.appendChild(card);
+      });
+      countLabel.textContent = `${docs.length} doc${docs.length!==1?'s':''}`;
+      listWrap.querySelectorAll('[data-del]').forEach(btn => {
+        btn.addEventListener('click', e => { e.stopPropagation(); const id = btn.getAttribute('data-del'); if (!confirm('Delete document '+id+'?')) return; fetch(`${window.API_BASE_URL}/api/documents/${id}`, { method:'DELETE' })
+          .then(r=>r.json()).then(()=> { setStatus('Deleted '+id); fetchDocs(); if (window.__selectedDoc===id) clearPreview(); })
+          .catch(err=> setStatus(err.message||'Delete failed')); });
+      });
+    }
+
+    function clearPreview() { preview.classList.add('hidden'); preview.removeAttribute('src'); metaEl.textContent=''; selectedDocIdEl.style.display='none'; selectedDocIdEl.textContent=''; openRawBtn.disabled = true; window.__selectedDoc = null; previewLabel.textContent='Preview'; }
+
+    function selectDoc(docId) {
+      const doc = (window.__docs||[]).find(d=>d.docId===docId); if (!doc) return; window.__selectedDoc = docId; selectedDocIdEl.textContent = docId; selectedDocIdEl.style.display='inline-block'; previewLabel.textContent = doc.originalName; metaEl.textContent = `${doc.chunks} chunks • ${doc.pages} pages • Created ${new Date(doc.createdAt).toLocaleString()}`; preview.src = `${window.API_BASE_URL}/api/documents/${docId}/file`; preview.classList.remove('hidden'); openRawBtn.disabled = false; openRawBtn.onclick = () => window.open(`${window.API_BASE_URL}/api/documents/${docId}/file`, '_blank'); }
+
+    function handleFiles(files) {
+      if (!files || !files.length) return; const file = files[0]; if (file.type !== 'application/pdf') { setStatus('Please select a PDF file.'); return; }
+      setStatus('Uploading and processing...', false); const formData = new FormData(); formData.append('file', file);
+      fetch(`${window.API_BASE_URL}/api/upload`, { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => { if (data.error) throw new Error(data.error); setStatus('PDF processed successfully ✔', true); fetchDocs().then(()=> selectDoc(data.docId)); })
+        .catch(err => { setStatus(err.message || 'Upload failed'); }); }
+
+    addBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', e => { const t = e.target; handleFiles(t && t.files ? t.files : null); });
+    filterInput.addEventListener('input', () => renderDocs());
+    refreshBtn.addEventListener('click', () => fetchDocs());
+    // Toggle panels for maximum PDF real estate
+    toggleDocsBtn.addEventListener('click', () => { docPanel.classList.toggle('collapsed'); });
+    maximizeBtn.addEventListener('click', () => { docPanel.classList.add('collapsed'); });
+    // If a docId is provided in the URL, fetch docs and auto-select it
+    const __qs = new URLSearchParams(location.search);
+    const __docFromQuery = __qs.get('docId');
+    if (__docFromQuery) {
+      fetchDocs().then(() => selectDoc(__docFromQuery));
+    } else {
+      fetchDocs();
+    }
+
+    // Design reference toggle
+    const designToggle = document.getElementById('designToggle');
+    const designPanel = document.getElementById('designPanel');
+    if (designToggle && designPanel) {
+      designToggle.addEventListener('click', () => {
+        const open = designPanel.style.display === 'block';
+        designPanel.style.display = open ? 'none' : 'block';
+        designToggle.textContent = open ? 'Design ▶' : 'Design ▼';
+      });
+    }
+
+    // --- CometChat Integration ---
+    (function initCometChat(){
+      const COMETCHAT_CREDENTIALS = { appID: '', appRegion: '', authKey: '' };
+      const stored = localStorage.getItem('demoUserUid');
+      const COMETCHAT_USER_UID = stored || 'cometchat-uid-1';
+      if (!stored) localStorage.setItem('demoUserUid', COMETCHAT_USER_UID);
+      const COMETCHAT_LAUNCH_OPTIONS = { targetElementID: 'cometChatMount', isDocked: false, width: '100%', height: '100%', chatType: 'user', defaultChatID: '', variantID: '' };
+      function log(msg, ...rest){ console.log('[CometChat]', msg, ...rest); }
+      window.addEventListener('DOMContentLoaded', () => {
+        if (typeof CometChatApp === 'undefined') { console.warn('[CometChat] SDK not loaded'); return; }
+        CometChatApp.init(COMETCHAT_CREDENTIALS)
+          .then(() => { log('Initialized'); return CometChatApp.login({ uid: COMETCHAT_USER_UID }); })
+          .then(user => { log('Logged in as', user?.uid); return CometChatApp.launch(COMETCHAT_LAUNCH_OPTIONS); })
+          .then(() => { log('Widget launched'); })
+          .catch(err => console.error('[CometChat] Error:', err));
+      });
+    })();
+    // -----------------------------
+  </script>
+</body>
+</html>
